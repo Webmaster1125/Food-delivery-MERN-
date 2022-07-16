@@ -3,7 +3,6 @@ const { Category } = require("../models/category.model");
 const checkDuplicatedCategory = async (req, res, next) => {
   try {
     const categoryFound = await Category.findOne({ name: req.body.category });
-
     if (categoryFound)
       return req
         .status(409)
@@ -22,7 +21,14 @@ const checkDuplicatedCategory = async (req, res, next) => {
 
 const checkCategoryExist = async (req, res, next) => {
   try {
-    const categoryFound = await Category.findById(req.params.id);
+    const categoryFound = await Category.findOne({ name: req.body.category });
+    if (categoryFound)
+      return req
+        .status(409)
+        .json({ successful: false, message: "The category already exist" });
+
+    next();
+    // const categoryFound = await Category.findById(req.params.id);
 
     if (!categoryFound)
       return req
